@@ -9,14 +9,14 @@ include includes\macros\macros.asm
 includelib includes\masm32.lib
 includelib includes\kernel32.lib
 .data
-	EOL EQU 00h
+	EOL 	EQU 00h
 	del256	DD 	0100h
 	del16   DD 	010h      
 	temp1 	DD 	?       
 	temp2 	DD 	?    
 	;define signs
-	sign1 DB 2 dup (EOL)
-	sign2 DB 2 dup (EOL)
+	sign1 	DB 	2 dup (EOL)
+	sign2 	DB 	2 dup (EOL)
 
 .code
 start:
@@ -45,7 +45,7 @@ metka1:
     jmp end_if
 
 gt9:
-    mov AL, 55
+	mov AL, 55
     add AL, DL
     mov [sign2], AL
  
@@ -54,11 +54,11 @@ end_if:
 	mov EAX, [temp2]
     div [del16]
     cmp EDX, 9
-    ja  gt9_1
+	ja  gt9_1
     
     ;EDX % 16 <= 9
-    mov AL, 48
-    add AL, DL
+	mov AL, 48
+	add AL, DL
     mov [sign1], AL
     jmp end_if1
 
