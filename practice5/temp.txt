@@ -1,0 +1,82 @@
+; Новый проект masm32 успешно создан
+; Заполнен демо программой «Здравствуй, мир!»
+.486
+.model flat, stdcall
+option casemap :none
+include includes\masm32.inc
+include includes\kernel32.inc
+include includes\macros\macros.asm
+includelib includes\masm32.lib
+includelib includes\kernel32.lib
+.data
+	EOL EQU 00h
+	del1 	DD 	0100000h
+	del2 	DW 	0100h  
+	part1 	DB 	?       
+	part2 	DB 	?       
+	part3 	DB 	?       
+	part4 	DB 	?       
+	temp1 	DW 	?       
+	temp2 	DW 	?    
+	;define signs
+	sign1 DB 2 dup (EOL)
+	sign2 DB 2 dup (EOL)
+	sign3 DB 2 dup (EOL)
+	sign4 DB 2 dup (EOL)
+	sign5 DB 2 dup (EOL)
+	sign6 DB 2 dup (EOL)
+	sign7 DB 2 dup (EOL)
+	sign8 DB 2 dup (EOL)
+	
+	
+.code
+start:
+	mov EAX, uval(input("[0..4*10^9]")) 
+	; first division
+	xor EDX, EDX        
+	div [del1]          
+	mov [temp1],AX     
+	mov [temp2],DX     
+
+	; second division
+	xor EDX, EDX  
+	mov AX, [temp1]     
+	div [del2]         
+	mov [part1],AL     
+	mov [part2],AH     
+	
+	; third division
+	xor EDX,EDX
+	mov AX,[temp2]
+	div [del2]         
+	mov [part3],AL     
+	mov [part4],AH
+	
+	xor EAX,EAX
+    mov AL, [part1]           
+    ; Вычисляем a % 16
+    mov BL 16             ; делитель 16
+    xor EDX, EDX            ; обнуляем EDX для операции div
+    div BL                ; делим EAX на 16, остаток будет в EDX
+    ; Сравниваем остаток с 9
+    cmp EDX, 9
+    ja  greater_than_9      ; если EDX > 9, переходим к метке greater_than_9
+
+less_than_or_equal_9:
+    ; Если a % 16 <= 9
+    mov AL, 30              ; AL = 30
+    add AL, DL              ; AL = 30 + (a % 16)
+    mov [sign1], AL         ; sign1[0] = 30 + (a % 16)
+    jmp end_if              ; пропускаем следующий блок
+
+greater_than_9:
+    ; Если a % 16 > 9
+    mov AL, 31              ; AL = 31
+    add AL, DL              ; AL = 31 + (a % 16)
+    mov [sign1], AL         ; sign1[0] = 31 + (a % 16)
+
+metka3:	
+	movzx EAX, [part1]
+	print str$(EAX), 13, 10
+	
+end start
