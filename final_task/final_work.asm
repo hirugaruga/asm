@@ -48,6 +48,7 @@ convert1 proc
 	fld st(1)
 	fmulp st(2), st(0)
 	fadd
+	fsqrt ;new  23.12.2024
 	fstp real10 ptr [eax]
 	ret
 convert1 endp
@@ -57,7 +58,7 @@ convert2 proc
 	fld real10 ptr [EAX]
 	fld real10 ptr [EAX+10]
 	fld st(1)
-	fld st(2)
+	fld st(1) ;new change st(2) to st(1)
 	fpatan
 	fstp real10 ptr [EAX+10]
 	fld st(0)
@@ -65,7 +66,7 @@ convert2 proc
 	fld st(1)
 	fmulp st(2),st(0)
 	fadd
-	fsqrt
+	fsqrt 
 	fstp real10 ptr [eax]
 
 	ret
@@ -85,7 +86,7 @@ input_split:
     jmp input_split
 gg:
 	invoke FpuAtoFL, ADDR temp, 0, DEST_FPU
-	fstp [vector[0]]
+	fstp vector[0]
 ;######################################################	
 	mov ESI,input("Input float number y or z:",13,10)
 	lea EDI,temp1
@@ -97,7 +98,7 @@ input_split1:
     jmp input_split1
 gg1:
 	invoke FpuAtoFL, ADDR temp1, 0, DEST_FPU
-	fstp [vector[10]]	
+	fstp vector[10]	
 ;#######################################################	
 	mov ESI,input("Input float number z or angle:",13,10)
 	lea EDI,temp2
@@ -109,7 +110,7 @@ input_split2:
     jmp input_split2
 gg2:
 	invoke FpuAtoFL, ADDR temp2, 0, DEST_FPU
-	fstp [vector[20]]	
+	fstp vector[20]
 ;###############end of input data#######################
 	
 	cmp [answer],1
